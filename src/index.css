@@ -48,4 +48,14 @@ body {
   .game-info {
     margin-left: 20px;
   }
-  
+/* velda adding */
+.photoCard {
+    width: 20%;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 20px;
+}
+
+.photoCard img{
+    width: 100%;
+}
