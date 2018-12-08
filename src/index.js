@@ -68,7 +68,12 @@
   
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './reset.css';
 import './index.css';
+// import images
+// import picon from './picon.jpg';
+import camera from './camera.png';
+import clock from './clock.png';
 // import $ from 'jquery';
 
 var api_key = "5eca61dad6d092dd2772b646e9103b62"
@@ -108,10 +113,13 @@ class Photo extends React.Component{
             buildUrl +=  '.staticflickr.com/' + data.photo.server + '/' 
             buildUrl +=  this.props.id + '_' + this.props.secret + '.jpg'
         
+            var date = new Date(data.photo.dates.taken);
+            date = date.toLocaleDateString();
+
             this.setState({tags: tags,
                 title:data.photo.title._content,
                 owner:data.photo.owner.realname,
-                date:data.photo.dates.taken,
+                date:date,
                 photoUrl:buildUrl,
                 linkUrl:data.photo.urls.url[0]._content});
         })
@@ -119,11 +127,16 @@ class Photo extends React.Component{
     render(){
         return(
             <div className="photoCard">   
-                <p>{this.state.owner}</p>                     
+                <span className="owner">
+                    <img src={camera} alt="picon"/>
+                    {this.state.owner}
+                </span>
                 <a href={this.state.linkUrl}><img key={this.props.id} src={this.state.photoUrl} alt={this.state.title}/></a>
-                <h1>{this.state.title}</h1>
-                <p>{this.state.date}</p>
-                <p>{this.state.tags.join(", ")}</p>
+                <span className="details">
+                    <h1>{this.state.title}</h1>
+                    <p className="clock"><img src={clock} alt="picon"/>{this.state.date}</p>
+                    <p className="tags">{this.state.tags.join(", ")}</p>
+                </span>
             </div>
         )
     }
@@ -146,25 +159,7 @@ class Background extends React.Component{
         .then(data => {
             var photoArray = data.photos.photo;
             let pictures = photoArray.map((pic) => {
-            // let pictures = data.results.map((pic) => {
-                console.log(pic);
-                // var farmID = pic.farm;
-                // var serverID = pic.server;
-                // var secret = pic.secret;
-                // var id = pic.id;
-                // var picUrl = 'https://farm' + farmID + '.staticflickr.com/' + serverID + '/' + id + '_' + secret + '.jpg';
-                // console.log(picUrl);
-                // return(
-                //     <div key = {pic.results}>                        
-                //         <img key={id} src={picUrl} alt={pic.title}/>
-                //         <h1>{pic.title}</h1>
-                //         <p>{pic.title}</p>
-                //         <p>{pic.title}</p>
-                //         <p>{pic.title}</p>
-                //     </div>
-                // )
-                return <Photo id = {pic.id} secret={pic.secret}/>
-                // return this.fetchPicture(pic);
+                return <Photo key={pic.id} id = {pic.id} secret={pic.secret}/>
             })
             this.setState({pictures: pictures});
             console.log("state", this.state.pictures);

@@ -1,61 +1,43 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
     margin: 20px;
+    background-color: #EC0B43;
   }
   
-  ol, ul {
-    padding-left: 30px;
-  }
-  
-  .board-row:after {
-    clear: both;
-    content: "";
-    display: table;
-  }
-  
-  .status {
-    margin-bottom: 10px;
-  }
-  
-  .square {
-    background: #fff;
-    border: 1px solid #999;
-    float: left;
-    font-size: 24px;
-    font-weight: bold;
-    line-height: 34px;
-    height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
-    text-align: center;
-    width: 34px;
-  }
-  
-  .square:focus {
-    outline: none;
-  }
-  
-  .kbd-navigation .square:focus {
-    background: #ddd;
-  }
-  
-  .game {
-    display: flex;
-    flex-direction: row;
-  }
-  
-  .game-info {
-    margin-left: 20px;
-  }
 /* velda adding */
 .photoCard {
-    width: 20%;
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-bottom: 20px;
+    width: 21%;
+    padding: 12px;
+    margin: 1%;
+    background-color: white;
+    border-radius: 5px;
+    float: left;
+    font-family: "Proxima Nova Soft","Helvetica Neue",sans-serif;
+    font-size: 1em;
 }
 
 .photoCard img{
     width: 100%;
+}
+
+.owner{
+    margin: 10px;
+    text-align: top;
+}
+.owner img{
+    width: 15px;
+    padding-right: 5px;
+}
+
+.details h1{
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.clock img{
+    width: 10px;
+    padding-right: 5px;
+}
+.tags{
+    color: grey;
 }
