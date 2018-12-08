@@ -81,7 +81,8 @@ class Photo extends React.Component{
             title: "",
             owner: "",
             date: "",
-            url: "",
+            buildUrl: "",
+            linkUrl: ""
         };
     }
     
@@ -111,15 +112,16 @@ class Photo extends React.Component{
                 title:data.photo.title._content,
                 owner:data.photo.owner.realname,
                 date:data.photo.dates.taken,
-                url:buildUrl});
+                photoUrl:buildUrl,
+                linkUrl:data.photo.urls.url[0]._content});
         })
     }
     render(){
         return(
-            <div className="photoCard">                        
-                <img key={this.props.id} src={this.state.url} alt={this.state.title}/>
+            <div className="photoCard">   
+                <p>{this.state.owner}</p>                     
+                <a href={this.state.linkUrl}><img key={this.props.id} src={this.state.photoUrl} alt={this.state.title}/></a>
                 <h1>{this.state.title}</h1>
-                <p>{this.state.owner}</p>
                 <p>{this.state.date}</p>
                 <p>{this.state.tags.join(", ")}</p>
             </div>
