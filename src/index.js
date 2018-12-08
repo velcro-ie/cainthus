@@ -71,9 +71,9 @@ import ReactDOM from 'react-dom';
 import './reset.css';
 import './index.css';
 // import images
-// import picon from './picon.jpg';
 import camera from './camera.png';
 import clock from './clock.png';
+import logo from './cainthus.png';
 // import $ from 'jquery';
 
 var api_key = "5eca61dad6d092dd2772b646e9103b62"
@@ -150,8 +150,24 @@ class Background extends React.Component{
             pictures: [],
         };
     }
+
     componentDidMount() {
-        var urlString = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + api_key + '&tags=buildings&page=2&per_page=10&format=json&nojsoncallback=1';
+        if (this.props.search !== "") {
+            this.getPictures()
+        }
+    }
+
+    componentWillReceiveProps(){
+        if (this.props.search !== "") {
+            this.getPictures()
+        }
+    }
+
+    getPictures(){
+        var urlString = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + api_key 
+        urlString += '&tags=' + this.props.search + '&page=2&per_page=10&format=json&nojsoncallback=1';
+        console.log(urlString);
+        console.log(this.props.search);
         fetch(urlString)
         .then(results => {
             return results.json();
@@ -166,7 +182,6 @@ class Background extends React.Component{
         })
     }
 
-
     render() {
         return(
             <div className = "container2">
@@ -178,8 +193,48 @@ class Background extends React.Component{
     }
 }
 
+class SearchBar extends React.Component{
+    constructor(){
+        super();
+        this.state = {
+            searchString: "",
+        };
+        this.handleInputChange = this.handleInputChangeUnbound.bind(this);
+        this.handleInputSubmit = this.handleInputSubmitUnbound.bind(this);
+    }
+    
+    handleInputChangeUnbound(event){
+        this.setState({searchString:event.target.value})
+    }
+
+    handleInputSubmitUnbound(event){
+        event.preventDefault()
+    }
+
+    render() {
+        return(
+            <div className = "">
+                <div className= "search">
+                    <img src={logo} alt="Cainthus Logo" />
+                    <form onSubmit={this.handleInputSubmitUnbound}>
+                        <input placeholder="search..."
+                            type="text"
+                            name="search"
+                            ref = {input => this.search = input}
+                            onChange = {this.handleInputChange}
+                        />
+                    </form>
+                </div>  
+                <div className= "photoResults">
+                    <Background search={this.state.searchString}/>
+                </div>  
+            </div>
+        );
+    }
+}
+
 
 ReactDOM.render(
-    <Background />,
+    <SearchBar />,
     document.getElementById('root')
 );

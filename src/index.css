@@ -4,6 +4,28 @@ body {
     background-color: #EC0B43;
   }
   
+.search{
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    float: left;
+    width: 95%;
+    margin: 1%;
+}
+.search form{
+    text-align: center;
+    font-size: 18px;
+    vertical-align: middle;
+
+}
+.search img{
+    float: left;
+    width: 15%;
+}
+
+.photoResults{
+    clear: both;
+}
 /* velda adding */
 .photoCard {
     width: 21%;
