@@ -78,7 +78,7 @@ import logo from './cainthus.png';
 
 var api_key = "5eca61dad6d092dd2772b646e9103b62"
 
-class Photo extends React.Component{
+class PhotoCard extends React.Component{
     constructor(){
         super();
         this.state = {
@@ -142,7 +142,7 @@ class Photo extends React.Component{
     }
 }
 
-class Background extends React.Component{
+class Photos extends React.Component{
     constructor(){
         super();
         this.state = {
@@ -165,7 +165,7 @@ class Background extends React.Component{
 
     getPictures(){
         var urlString = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + api_key 
-        urlString += '&tags=' + this.props.search + '&page=2&per_page=10&format=json&nojsoncallback=1';
+        urlString += '&tags=' + this.props.search + '&page=2&per_page=20&format=json&nojsoncallback=1';
         console.log(urlString);
         console.log(this.props.search);
         fetch(urlString)
@@ -175,7 +175,7 @@ class Background extends React.Component{
         .then(data => {
             var photoArray = data.photos.photo;
             let pictures = photoArray.map((pic) => {
-                return <Photo key={pic.id} id = {pic.id} secret={pic.secret}/>
+                return <PhotoCard key={pic.id} id = {pic.id} secret={pic.secret}/>
             })
             this.setState({pictures: pictures});
             console.log("state", this.state.pictures);
@@ -192,41 +192,63 @@ class Background extends React.Component{
         );
     }
 }
-
 class SearchBar extends React.Component{
     constructor(){
         super();
         this.state = {
-            searchString: "",
+            search: "",
         };
         this.handleInputChange = this.handleInputChangeUnbound.bind(this);
         this.handleInputSubmit = this.handleInputSubmitUnbound.bind(this);
     }
     
     handleInputChangeUnbound(event){
-        this.setState({searchString:event.target.value})
+        this.setState({search:event.target.value})
     }
 
     handleInputSubmitUnbound(event){
+        this.props.onChange(this.state.search);
         event.preventDefault()
     }
 
     render() {
         return(
+            <div className= "search">
+                <img src={logo} alt="Cainthus Logo" />
+                <form onSubmit={this.handleInputSubmit}>
+                    <input placeholder="search..."
+                        type="text"
+                        name="search"
+                        ref = {input => this.search = input}
+                        onChange = {this.handleInputChange}
+                    />
+                </form>
+            </div> 
+        );
+    }
+}
+
+
+class App extends React.Component{
+    constructor(){
+        super();
+        this.state = {
+            searchString: "",
+        };
+        this.handleSubmit = this.handleSubmitUnbound.bind(this);
+    }
+    
+    handleSubmitUnbound(txt){
+        this.setState({searchString:txt});
+        console.log("in app: ",txt);
+    }
+
+    render() {
+        return(
             <div className = "">
-                <div className= "search">
-                    <img src={logo} alt="Cainthus Logo" />
-                    <form onSubmit={this.handleInputSubmitUnbound}>
-                        <input placeholder="search..."
-                            type="text"
-                            name="search"
-                            ref = {input => this.search = input}
-                            onChange = {this.handleInputChange}
-                        />
-                    </form>
-                </div>  
+                <SearchBar  onChange={this.handleSubmit}/>
                 <div className= "photoResults">
-                    <Background search={this.state.searchString}/>
+                    <Photos search={this.state.searchString}/>
                 </div>  
             </div>
         );
@@ -235,6 +257,6 @@ class SearchBar extends React.Component{
 
 
 ReactDOM.render(
-    <SearchBar />,
+    <App />,
     document.getElementById('root')
 );
