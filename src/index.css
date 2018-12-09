@@ -2,7 +2,7 @@ body {
     font: 14px "Century Gothic", Futura, sans-serif;
     margin: 20px;
     margin-top: 0px;
-    background-color: #EC0B43;
+    background-color: #EE3C67;
   }
   
 .search{
@@ -12,11 +12,13 @@ body {
     float: left;
     width: 95%;
     margin: 1%;
-}
-.search form{
-    text-align: center;
-    font-size: 18px;
+    font-size: 2em;
     vertical-align: middle;
+}
+
+.search form{
+    float: right;
+    padding: 10px;
 }
 
 .search img{
@@ -29,7 +31,7 @@ body {
 }
 /* velda adding */
 .photoCard {
-    width: 21%;
+    width: 16%;
     padding: 12px;
     margin: 1%;
     background-color: white;

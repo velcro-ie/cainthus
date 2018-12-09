@@ -68,6 +68,7 @@
   
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ScrollUpButton from "react-scroll-up-button";
 import './reset.css';
 import './index.css';
 // import images
@@ -154,11 +155,7 @@ class Photos extends React.Component{
             isLoading:false,
         };
 
-        window.onscroll = () =>{
-            const {
-                loadPhotos,
-            } = this;
-    
+        window.onscroll = () =>{    
             if (this.state.error || this.state.isLoading || this.state.noMore) return;
             if (
                 window.innerHeight + document.documentElement.scrollTop
@@ -227,25 +224,24 @@ class Photos extends React.Component{
 
     render() {
         return(
-            <div className = "container2">
-                <div className= "container1">
-                    {this.state.pictures}
-                    {this.state.error &&
-                        <div style={{ color: '#900' }} className="errMsg">
-                            {this.state.error}
-                        </div>
-                    }
-                    {this.state.isLoading &&
-                        <div className="errMsg">Loading...</div>
-                    }
-                    {this.state.noMore &&
-                        <div className="errMsg">There are no more images for this search!</div>
-                    }
-                </div> 
+            <div className="photoResults">
+                {this.state.pictures}
+                {this.state.error &&
+                    <div style={{ color: '#900' }} className="errMsg">
+                        {this.state.error}
+                    </div>
+                }
+                {this.state.isLoading &&
+                    <div className="errMsg">Loading...</div>
+                }
+                {this.state.noMore &&
+                    <div className="errMsg">There are no more images for this search!</div>
+                }
             </div>
         );
     }
 }
+
 class SearchBar extends React.Component{
     constructor(){
         super();
@@ -270,6 +266,7 @@ class SearchBar extends React.Component{
             <div className= "search">
                 <img src={logo} alt="Cainthus Logo" />
                 <form onSubmit={this.handleInputSubmit}>
+                    <label>Search: </label>
                     <input placeholder="search..."
                         type="text"
                         name="search"
@@ -281,7 +278,6 @@ class SearchBar extends React.Component{
         );
     }
 }
-
 
 class App extends React.Component{
     constructor(){
@@ -300,10 +296,9 @@ class App extends React.Component{
     render() {
         return(
             <div className = "">
-                <SearchBar  onChange={this.handleSubmit}/>
-                <div className= "photoResults">
-                    <Photos search={this.state.searchString}/>
-                </div>  
+                <SearchBar  onChange={this.handleSubmit} />
+                <Photos search={this.state.searchString} />
+                <ScrollUpButton />
             </div>
         );
     }
