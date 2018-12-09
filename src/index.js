@@ -146,8 +146,26 @@ class Photos extends React.Component{
     constructor(){
         super();
         this.state = {
-            tags: ["buildings"],
             pictures: [],
+            currentSearch: "",
+            nextPage: 1,
+            error: false,
+            noMore:false,
+            isLoading:false,
+        };
+
+        window.onscroll = () =>{
+            const {
+                loadPhotos,
+            } = this;
+    
+            if (this.state.error || this.state.isLoading || this.state.noMore) return;
+            if (
+                window.innerHeight + document.documentElement.scrollTop
+                === document.documentElement.offsetHeight
+            ) {
+                this.getPictures();
+            }
         };
     }
 
@@ -161,11 +179,23 @@ class Photos extends React.Component{
         if (this.props.search !== "") {
             this.getPictures()
         }
+        if (this.props.search !== this.state.currentSearch){
+            this.setState({
+                pictures: [],
+                currentSearch: "",
+                nextPage: 1,
+                error: false,
+                noMore:false,
+                isLoading:false,});
+            this.getPictures()
+        }
     }
 
     getPictures(){
-        var urlString = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + api_key 
-        urlString += '&tags=' + this.props.search + '&page=2&per_page=20&format=json&nojsoncallback=1';
+        this.setState({ isLoading: true })
+        var urlString = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + api_key;
+        urlString += '&tags=' + this.props.search + '&page=' + this.state.nextPage;
+        urlString += '&per_page=20&format=json&nojsoncallback=1';
         console.log(urlString);
         console.log(this.props.search);
         fetch(urlString)
@@ -173,13 +203,26 @@ class Photos extends React.Component{
             return results.json();
         })
         .then(data => {
+            console.log(data);
             var photoArray = data.photos.photo;
             let pictures = photoArray.map((pic) => {
-                return <PhotoCard key={pic.id} id = {pic.id} secret={pic.secret}/>
+                return <PhotoCard key={this.state.nextPage + "-" + pic.id} id = {pic.id} secret={pic.secret}/>
             })
-            this.setState({pictures: pictures});
-            console.log("state", this.state.pictures);
+            this.setState({pictures: this.state.pictures.concat(pictures)});
+            var nextPageNo = this.state.nextPage + 1;
+            this.setState({nextPage:nextPageNo});
+            if (nextPageNo > data.photos.pages){
+                this.setState({noMore:true});
+            }
         })
+        .catch((err) => {
+            this.setState({
+                error: err.message,
+                isLoading: false,
+            });
+        })
+          
+        this.setState({ isLoading: false })
     }
 
     render() {
@@ -187,7 +230,18 @@ class Photos extends React.Component{
             <div className = "container2">
                 <div className= "container1">
                     {this.state.pictures}
-                </div>    
+                    {this.state.error &&
+                        <div style={{ color: '#900' }} className="errMsg">
+                            {this.state.error}
+                        </div>
+                    }
+                    {this.state.isLoading &&
+                        <div className="errMsg">Loading...</div>
+                    }
+                    {this.state.noMore &&
+                        <div className="errMsg">There are no more images for this search!</div>
+                    }
+                </div> 
             </div>
         );
     }
