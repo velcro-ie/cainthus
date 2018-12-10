@@ -10,7 +10,7 @@ body {
     border-radius: 5px;
     padding: 10px;
     float: left;
-    width: 95%;
+    width: 96%;
     margin: 1%;
     font-size: 2em;
     vertical-align: middle;
@@ -28,17 +28,30 @@ body {
 
 .photoResults{
     clear: both;
-}
-/* velda adding */
-.photoCard {
-    width: 16%;
-    padding: 12px;
+    width: 97%;
     margin: 1%;
+}
+
+.masonry-grid {
+    display: -webkit-box; /* Not needed if autoprefixing */
+    display: -ms-flexbox; /* Not needed if autoprefixing */
+    display: flex;
+    margin-left: -20px; /* gutter size offset */
+    width: auto;
+}
+  
+.masonry-grid_column {
+    padding-left: 20px; /* gutter size */
+    background-clip: padding-box;
+}
+
+.photoCard {
+    padding: 12px;
     background-color: white;
     border-radius: 5px;
-    float: left;
     font-family: "Proxima Nova Soft","Helvetica Neue",sans-serif;
     font-size: 1em;
+    margin-bottom: 10px;
 }
 
 .photoCard img{
@@ -77,3 +90,5 @@ body {
     padding: 10px;
     margin: 1%;
 }
+
+ 

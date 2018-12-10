@@ -1,81 +1,14 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import './index.css';
-
-// class Square extends React.Component {
-//     render() {
-//       return (
-//         <button className="square">
-//           {/* TODO */}
-//         </button>
-//       );
-//     }
-//   }
-  
-//   class Board extends React.Component {
-//     renderSquare(i) {
-//       return <Square />;
-//     }
-  
-//     render() {
-//       const status = 'Next player: X';
-  
-//       return (
-//         <div>
-//           <div className="status">{status}</div>
-//           <div className="board-row">
-//             {this.renderSquare(0)}
-//             {this.renderSquare(1)}
-//             {this.renderSquare(2)}
-//           </div>
-//           <div className="board-row">
-//             {this.renderSquare(3)}
-//             {this.renderSquare(4)}
-//             {this.renderSquare(5)}
-//           </div>
-//           <div className="board-row">
-//             {this.renderSquare(6)}
-//             {this.renderSquare(7)}
-//             {this.renderSquare(8)}
-//           </div>
-//         </div>
-//       );
-//     }
-//   }
-  
-//   class Game extends React.Component {
-//     render() {
-//       return (
-//         <div className="game">
-//           <div className="game-board">
-//             <Board />
-//           </div>
-//           <div className="game-info">
-//             <div>{/* status */}</div>
-//             <ol>{/* TODO */}</ol>
-//           </div>
-//         </div>
-//       );
-//     }
-//   }
-  
-//   // ========================================
-  
-//   ReactDOM.render(
-//     <Game />,
-//     document.getElementById('root')
-//   );
-  
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ScrollUpButton from "react-scroll-up-button";
+import Masonry from 'react-masonry-css'
 import './reset.css';
 import './index.css';
+
 // import images
 import camera from './camera.png';
 import clock from './clock.png';
 import logo from './cainthus.png';
-// import $ from 'jquery';
 
 var api_key = "5eca61dad6d092dd2772b646e9103b62"
 
@@ -144,11 +77,10 @@ class PhotoCard extends React.Component{
 }
 
 class Photos extends React.Component{
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             pictures: [],
-            currentSearch: "",
             nextPage: 1,
             error: false,
             noMore:false,
@@ -166,25 +98,20 @@ class Photos extends React.Component{
         };
     }
 
-    componentDidMount() {
-        if (this.props.search !== "") {
-            this.getPictures()
-        }
-    }
-
-    componentWillReceiveProps(){
-        if (this.props.search !== "") {
-            this.getPictures()
-        }
-        if (this.props.search !== this.state.currentSearch){
+    // componentDidMount() {
+    //     if (this.props.search !== "") {
+    //         this.getPictures()
+    //     }
+    // }
+    
+    componentWillReceiveProps(nextProps){
+        if (this.props.search !== nextProps.search){
             this.setState({
                 pictures: [],
-                currentSearch: "",
                 nextPage: 1,
                 error: false,
                 noMore:false,
-                isLoading:false,});
-            this.getPictures()
+                isLoading:false,},() =>this.getPictures());
         }
     }
 
@@ -193,14 +120,11 @@ class Photos extends React.Component{
         var urlString = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + api_key;
         urlString += '&tags=' + this.props.search + '&page=' + this.state.nextPage;
         urlString += '&per_page=20&format=json&nojsoncallback=1';
-        console.log(urlString);
-        console.log(this.props.search);
         fetch(urlString)
         .then(results => {
             return results.json();
         })
         .then(data => {
-            console.log(data);
             var photoArray = data.photos.photo;
             let pictures = photoArray.map((pic) => {
                 return <PhotoCard key={this.state.nextPage + "-" + pic.id} id = {pic.id} secret={pic.secret}/>
@@ -218,14 +142,18 @@ class Photos extends React.Component{
                 isLoading: false,
             });
         })
-          
         this.setState({ isLoading: false })
     }
 
     render() {
         return(
             <div className="photoResults">
-                {this.state.pictures}
+                <Masonry breakpointCols={4}
+                    className="masonry-grid"
+                    columnClassName="masonry-grid_column">                    
+                    {this.state.pictures}
+                </Masonry>
+
                 {this.state.error &&
                     <div style={{ color: '#900' }} className="errMsg">
                         {this.state.error}
@@ -253,11 +181,15 @@ class SearchBar extends React.Component{
     }
     
     handleInputChangeUnbound(event){
-        this.setState({search:event.target.value})
+        this.setState({search:event.target.value}, () =>{
+            this.props.onChange(this.state.search);
+        })
     }
 
     handleInputSubmitUnbound(event){
-        this.props.onChange(this.state.search);
+        this.setState({search:this._search.value}, () =>{
+            this.props.onChange(this.state.search);
+        })
         event.preventDefault()
     }
 
@@ -270,8 +202,7 @@ class SearchBar extends React.Component{
                     <input placeholder="search..."
                         type="text"
                         name="search"
-                        ref = {input => this.search = input}
-                        onChange = {this.handleInputChange}
+                        ref = {input => this._search = input}
                     />
                 </form>
             </div> 
@@ -290,7 +221,6 @@ class App extends React.Component{
     
     handleSubmitUnbound(txt){
         this.setState({searchString:txt});
-        console.log("in app: ",txt);
     }
 
     render() {
