@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ScrollUpButton from "react-scroll-up-button";
-import Masonry from 'react-masonry-css'
+import Masonry from 'react-masonry-css';
 import './reset.css';
 import './index.css';
 
@@ -97,12 +97,6 @@ class Photos extends React.Component{
             }
         };
     }
-
-    // componentDidMount() {
-    //     if (this.props.search !== "") {
-    //         this.getPictures()
-    //     }
-    // }
     
     componentWillReceiveProps(nextProps){
         if (this.props.search !== nextProps.search){
